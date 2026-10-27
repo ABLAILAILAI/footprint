@@ -45,6 +45,8 @@
 .hero-line-2 {
   animation-delay: 0.2s;
   color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
 }
 
 .hero-paragraph {
