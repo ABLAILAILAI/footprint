@@ -10,6 +10,7 @@ import {
   describeTopKeywords,
   eventTimeScatter,
   hourlyHistogram,
+  mostRecentYear,
   recommendationsFor,
   topCreators,
   topSearchKeywords,
@@ -84,11 +85,15 @@ function Stats({ refreshToken }) {
     setStatus('loading')
     db.events
       .toArray()
-      .then((events) => {
-        if (events.length === 0) {
+      .then((allEvents) => {
+        if (allEvents.length === 0) {
           setStatus('empty')
           return
         }
+        // A real export can hold years of history. Stats are scoped to
+        // the most recent year so "year in review" reflects an actual
+        // recent routine instead of a lifetime average.
+        const events = mostRecentYear(allEvents)
         const creators = topCreators(events)
         const interests = categorizeInterests(events)
         setData({
@@ -100,6 +105,7 @@ function Stats({ refreshToken }) {
           overTime: activityOverTime(events),
           scatter: eventTimeScatter(events),
           recommendations: recommendationsFor({ interests, creators }),
+          olderEventCount: allEvents.length - events.length,
         })
         setStatus('ready')
       })
@@ -138,12 +144,20 @@ function Stats({ refreshToken }) {
     )
   }
 
-  const { creators, keywords, timeOfDay, hourly, interests, overTime, scatter, recommendations } = data
+  const { creators, keywords, timeOfDay, hourly, interests, overTime, scatter, recommendations, olderEventCount } =
+    data
   const maxKeywordCount = keywords[0]?.count ?? 1
 
   return (
     <section className="card">
       <h2>Your interests</h2>
+      {olderEventCount > 0 && (
+        <p className="card-hint">
+          Showing your most recent year of activity ({olderEventCount} older event
+          {olderEventCount === 1 ? '' : 's'} from before that aren't included, so this reflects a
+          recent routine instead of a lifetime average).
+        </p>
+      )}
 
       <div className="stat-tabs-wrap">
         {scrollState.left && <div className="stat-tabs-fade stat-tabs-fade-left" aria-hidden="true" />}

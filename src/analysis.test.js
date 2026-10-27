@@ -9,6 +9,7 @@ import {
   describeTopKeywords,
   eventTimeScatter,
   hourlyHistogram,
+  mostRecentYear,
   recommendationsFor,
   topCreators,
   topSearchKeywords,
@@ -27,6 +28,24 @@ function event(overrides) {
     ...overrides,
   }
 }
+
+describe('mostRecentYear', () => {
+  it('keeps only events within a year of the newest one, not of "now"', () => {
+    const newest = new Date(2026, 0, 1).getTime()
+    const events = [
+      event({ timestamp: newest }),
+      event({ timestamp: newest - 100 * 24 * 60 * 60 * 1000 }), // 100 days earlier — kept
+      event({ timestamp: newest - 400 * 24 * 60 * 60 * 1000 }), // 400 days earlier — dropped
+    ]
+    const result = mostRecentYear(events)
+    expect(result).toHaveLength(2)
+    expect(result.every((e) => e.timestamp >= newest - 365 * 24 * 60 * 60 * 1000)).toBe(true)
+  })
+
+  it('returns an empty array unchanged instead of crashing', () => {
+    expect(mostRecentYear([])).toEqual([])
+  })
+})
 
 describe('topCreators', () => {
   it('ranks creators by watch count and ignores non-watch events', () => {

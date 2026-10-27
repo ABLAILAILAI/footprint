@@ -5,6 +5,26 @@
 // prediction research; see the "Rough interest categories" labeling in
 // the UI for why that distinction matters.
 
+const YEAR_MS = 365 * 24 * 60 * 60 * 1000
+
+/** Narrows events down to the most recent year of activity, relative to
+ * the newest event rather than "now" (so this adapts to whenever the
+ * export was actually taken). A real export can hold several years of
+ * history — Google doesn't expire it — and without this, "year in
+ * review" stats quietly become a lifetime average blending together
+ * very different life phases, which looks wrong because it is: someone
+ * looking for their current routine shouldn't see it diluted by middle
+ * school. */
+export function mostRecentYear(events) {
+  if (events.length === 0) return events
+  let latest = -Infinity
+  for (const event of events) {
+    if (event.timestamp > latest) latest = event.timestamp
+  }
+  const cutoff = latest - YEAR_MS
+  return events.filter((event) => event.timestamp >= cutoff)
+}
+
 const STOPWORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'but', 'of', 'to', 'in', 'on', 'for',
   'with', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'how', 'what',
