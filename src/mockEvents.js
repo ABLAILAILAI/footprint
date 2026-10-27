@@ -3,6 +3,19 @@ const YOUTUBE_VIDEOS = [
   { title: 'Illinois vs. Ohio State Highlights', creator: 'Big Ten Network' },
   { title: 'Lo-fi Beats to Study To', creator: 'ChilledCow' },
   { title: 'Building a CPU From Scratch', creator: 'Ben Eater' },
+  { title: 'Speedrun World Record Reaction', creator: 'Summoning Salt' },
+  { title: 'React useEffect Explained', creator: 'Fireship' },
+]
+
+const YOUTUBE_SEARCHES = [
+  'neural network tutorial',
+  'illinois football highlights',
+  'lo-fi study playlist',
+  'how to build a cpu',
+  'speedrun world record',
+  'react useeffect explained',
+  'best study music',
+  'cs 124 project ideas',
 ]
 
 const SPOTIFY_SONGS = [
@@ -57,15 +70,27 @@ export function generateMockEvents(count = 150) {
     const platform = randomItem(['youtube', 'spotify', 'netflix', 'instagram'])
 
     if (platform === 'youtube') {
-      const video = randomItem(YOUTUBE_VIDEOS)
-      events.push(
-        makeEvent({
-          platform,
-          type: 'watch',
-          ...video,
-          durationMs: (2 + Math.random() * 38) * 60 * 1000,
-        }),
-      )
+      if (Math.random() < 0.25) {
+        events.push(
+          makeEvent({
+            platform,
+            type: 'search',
+            title: randomItem(YOUTUBE_SEARCHES),
+            creator: null,
+            durationMs: null,
+          }),
+        )
+      } else {
+        const video = randomItem(YOUTUBE_VIDEOS)
+        events.push(
+          makeEvent({
+            platform,
+            type: 'watch',
+            ...video,
+            durationMs: (2 + Math.random() * 38) * 60 * 1000,
+          }),
+        )
+      }
     } else if (platform === 'spotify') {
       const song = randomItem(SPOTIFY_SONGS)
       events.push(

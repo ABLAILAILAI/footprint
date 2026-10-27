@@ -11,8 +11,16 @@ const PLATFORM_LABELS = {
   instagram: 'Instagram',
 }
 
+// A real history export, as plain text/HTML/JSON, is at most a few tens
+// of MB even with years of activity. A .zip much bigger than that is a
+// sign the whole Takeout archive got dropped in with photos/videos still
+// inside — JSZip has to open the archive to scan it, and doing that for
+// something gigabytes in size can freeze the tab. Caught here, before
+// that happens, with a message telling the person what to do instead.
+const MAX_ZIP_BYTES = 50 * 1024 * 1024
+
 function ImportZone({ onImported }) {
-  // status: 'checking' | 'imported' | 'detected' | 'unrecognized' | 'error'
+  // status: 'checking' | 'imported' | 'detected' | 'unrecognized' | 'too-large' | 'error'
   const [files, setFiles] = useState([])
   const [isDragOver, setIsDragOver] = useState(false)
   const inputRef = useRef(null)
@@ -31,6 +39,11 @@ function ImportZone({ onImported }) {
     setFiles((prev) => [...incoming, ...prev])
 
     for (const entry of incoming) {
+      if (entry.file.name.toLowerCase().endsWith('.zip') && entry.file.size > MAX_ZIP_BYTES) {
+        updateFile(entry.id, { status: 'too-large' })
+        continue
+      }
+
       try {
         const source = await locatePlatformSource(entry.file)
 
@@ -116,6 +129,12 @@ function ImportZone({ onImported }) {
               )}
               {f.status === 'unrecognized' && (
                 <span className="tag tag-unrecognized">Unrecognized file</span>
+              )}
+              {f.status === 'too-large' && (
+                <span className="tag tag-error">
+                  Too big to scan in the browser — open the zip and drag in just the
+                  history file instead (e.g. watch-history.html)
+                </span>
               )}
               {f.status === 'error' && (
                 <span className="tag tag-error">Couldn't read file: {f.error}</span>

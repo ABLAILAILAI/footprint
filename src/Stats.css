@@ -1,0 +1,132 @@
+.stat-tabs-wrap {
+  position: relative;
+  margin: 1rem 0 1.5rem;
+}
+
+.stat-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.stat-tabs-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0.25rem;
+  width: 2.5rem;
+  pointer-events: none;
+}
+
+.stat-tabs-fade-left {
+  left: 0;
+  background: linear-gradient(to right, var(--card-bg), transparent);
+}
+
+.stat-tabs-fade-right {
+  right: 0;
+  background: linear-gradient(to left, var(--card-bg), transparent);
+}
+
+.stat-tab {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: none;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.stat-tab:hover {
+  color: var(--text);
+  box-shadow: none;
+}
+
+.stat-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.stat-tab-active {
+  border-color: rgba(240, 162, 76, 0.5);
+  background: rgba(240, 162, 76, 0.1);
+  color: var(--text);
+}
+
+.stat-block {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.stat-block h3 {
+  font-size: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.word-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  align-items: baseline;
+  line-height: 1.6;
+}
+
+.word-cloud-word {
+  line-height: 1;
+}
+
+.stat-analysis {
+  margin: 0.75rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.stat-analysis strong {
+  color: var(--text);
+}
+
+.chart-hint {
+  margin: 0.5rem 0 0;
+  color: var(--subtle);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.recommend-group {
+  margin-top: 1rem;
+}
+
+.recommend-group:first-of-type {
+  margin-top: 0;
+}
+
+.recommend-category {
+  margin: 0 0 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.recommend-category strong {
+  color: var(--text);
+}
+
+.recommend-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.recommend-chip {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: rgba(240, 162, 76, 0.08);
+  color: var(--text);
+  font-size: 0.85rem;
+}

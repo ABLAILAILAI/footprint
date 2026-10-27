@@ -27,6 +27,15 @@ uploaded — because these platforms don't offer usable APIs for this, and
   actually dragging the real zip onto the import box (not tap-to-browse) —
   got the same "YouTube: 5033 events (484 skipped)" result, which also
   finally confirms the real drag gesture works (pending since M3).
+- 2026-10-20: M4 re-verified against the live production site
+  (ablailailai.github.io/footprint, not just local dev) with all 6 real
+  Takeout zip parts. Part 1 matched the earlier dev-server result exactly
+  (5033 events, 484 skipped); Part 2 — a different real file, never
+  tested before — parsed cleanly too (1762 events, 652 skipped); Parts
+  3-5 were correctly tagged "Unrecognized file" (they're other YouTube
+  data like playlists/library, not watch/search history) instead of
+  crashing or mismatching. Good real-world confidence in both the
+  parser and the deployed build.
 - 2026-10-14: Visual polish pass — the import box and the mock-data tool
   now live in distinct, consistently-styled cards with section headers
   explaining what each is for, instead of being bare, unlabeled blocks.
@@ -51,7 +60,6 @@ uploaded — because these platforms don't offer usable APIs for this, and
 
 ## Next
 
-- Confirm the live link works: https://ablailailai.github.io/footprint/
 - M5: Spotify parser (Extended Streaming History JSON)
 - M6: Netflix + Instagram parsers
 - M7: Stats engine
